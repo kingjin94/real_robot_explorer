@@ -1,0 +1,18 @@
+<launch>
+	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
+		<!-- remap from=global to=inNode -->
+		<remap from="/panda/depth_camera/depth_image" to="/camera/depth/image_rect_raw" />
+		<remap from="/panda/depth_camera/image" to="/camera/color/image_raw" />
+	</include>
+	<include file="$(find real_robot_explorer)/launch/setupMoveIt.launch"/>
+	<node name="CameraTransformPanda" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079632679 0 -1.57079632679 panda_camera panda/panda_camera 10"/>
+	<node name="CameraTransformRealSense" pkg="tf" type="static_transform_publisher" args=" 0.06550178 0.03285377 0.06060418 0.021597057396272504 0.047311542240894996 1.5202722503648773 panda_hand camera_link 10"/>
+	<!-- From old callibration
+	T =[ 0.05044607, -0.99843944,  0.02395573,  0.06550178],
+       [ 0.99760638,  0.05151083,  0.04613191, -0.03285377],
+       [-0.04729389,  0.02157121,  0.99864807, -0.06060418],
+       [ 0.        ,  0.        ,  0.        ,  1.        ]
+    rpy = (0.021597057396272504, 0.047311542240894996, 1.5202722503648773)
+    xyz = [ 0.06550178, -0.03285377, -0.06060418]
+	-->
+</launch>

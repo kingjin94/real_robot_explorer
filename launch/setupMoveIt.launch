@@ -1,0 +1,8 @@
+<launch>
+	<param name="robot_description" command="$(find xacro)/xacro --inorder '$(find franka_description)/robots/panda_arm_hand.urdf.xacro'"/> <!-- always with gripper -->
+	<!-- Start panda_moveit_config panda_control.launch on NUC to start controller -->
+	<node name="remote_controller" pkg="real_robot_explorer" type="startControllerOnNUC.bash" output="screen"/>
+	<include file="$(find panda_moveit_config)/launch/move_group.launch">
+		<arg name="real_robot" value="true"/>
+	</include>
+</launch>
