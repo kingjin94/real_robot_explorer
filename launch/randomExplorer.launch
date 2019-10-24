@@ -1,0 +1,5 @@
+<launch>
+<node pkg="enhanced_sim" type="random_explorer2.py" name="random_explorer2" output="screen"> 
+	<remap from="/panda_arm_controller/follow_joint_trajectory" to="/position_joint_trajectory_controller/follow_joint_trajectory" />
+</node>
+</launch>
