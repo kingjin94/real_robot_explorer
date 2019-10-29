@@ -1,4 +1,5 @@
 <launch>
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find real_robot_explorer)/launch/debug_view.rviz"/>
 	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
 		<!-- remap from=global to=inNode -->
 		<arg name="depth_width"         default="848"/>
@@ -9,17 +10,18 @@
 	</include>
 	
 	<include file="$(find real_robot_explorer)/launch/setupMoveIt.launch"/>
-	<node name="CameraTransformPanda" pkg="tf" type="static_transform_publisher" args="0 0 0 0 1.5707963267948966 -1.5707963267948966 camera_color_frame panda/panda_camera 10"/> <!-- offset frame orientation realsense - urdf filter / ros default -->
+	<!-- offset frame orientation realsense - urdf filter / ros default -->
+	<node name="CameraTransformPanda" pkg="tf" type="static_transform_publisher" args="0.0662268627105 -0.033934193507 0.0554193486365 0.0101592058061 0.0136029380375 0.700646284846 0.713306760199 panda_hand panda/panda_camera 10"/> <!-- offset frame orientation realsense - urdf filter / ros default -->
 	<node name="CameraTransformRealSense" pkg="tf" type="static_transform_publisher" args=" 0.06550178 0.03285377 0.06060418 0.021597057396272504 0.047311542240894996 1.5202722503648773 panda_hand camera_link 10"/> <!--camera_link?-->
 
 	<include file="$(find realtime_urdf_filter)/launch/realtime_urdf_filter.launch"> <!-- start anti-self filter for camera image -->
 		<arg name="depth_in" value="/camera/aligned_depth_to_color/image_raw"/>
 		<arg name="depth_camera_info" default="/camera/aligned_depth_to_color/camera_info"/>
 		<arg name="color_in" default="/camera/color/image_raw"/>
-		<arg name="depth_scale" default="1000.0"/>
+		<arg name="depth_scale" default="0.001"/>
 	</include>
 
-
+	<include file="$(find enhanced_sim)/launch/explorerOctoMap.launch"/> 
 	<!-- From old callibration
 	T =[ 0.05044607, -0.99843944,  0.02395573,  0.06550178],
        [ 0.99760638,  0.05151083,  0.04613191, -0.03285377],
@@ -27,5 +29,16 @@
        [ 0.        ,  0.        ,  0.        ,  1.        ]
     rpy = (0.021597057396272504, 0.047311542240894996, 1.5202722503648773)
     xyz = [ 0.06550178, -0.03285377, -0.06060418]
+    
+    New calibration (28.10), from panda_hand to camera_color_optical_frame -> publish as new transform to panda/panda_camera
+    Pos:
+    x 0.0662268627105 
+    y -0.033934193507 
+    z 0.0554193486365 
+    Rot:
+    x 0.0101592058061 
+    y 0.0136029380375 
+    z 0.700646284846 
+    w 0.713306760199
 	-->
 </launch>
