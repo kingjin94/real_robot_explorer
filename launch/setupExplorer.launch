@@ -35,4 +35,7 @@
     z 0.700646284846 
     w 0.713306760199
 	-->
+	
+	<node name="CollidingNode" pkg="enhanced_sim" type="CollidingNode.py" output="screen"/>
+	<node name="CollisionObserverNode" pkg="real_robot_explorer" type="forceObserver.py" output="screen"/>
 </launch>
