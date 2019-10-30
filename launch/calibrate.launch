@@ -1,0 +1,34 @@
+<launch>
+  <!-- (start your robot's MoveIt! stack, e.g. include its moveit_planning_execution.launch) -->		
+  <include file="$(find real_robot_explorer)/launch/setupCamera.launch"/>
+
+  <include file="$(find real_robot_explorer)/launch/setupMoveIt.launch"/>
+  
+  <!-- (start your tracking system's ROS driver) -->
+  <node name="checkerboarfinder" pkg="tuw_checkerboard" type="tuw_checkerboard_node">
+	  <remap from="image" to="/camera/color/image_raw" />
+	  <remap from="camera_info" to="/camera/color/camera_info" />
+<!--
+	  Add configuration for our checkerboard with 2.6 mm and 9x6
+-->
+  </node> 
+  
+  <node name="dynamic_reconfigure_load" pkg="dynamic_reconfigure" type="dynparam" args="load /checkerboarfinder $(find real_robot_explorer)/config/checkerboardfinder.yaml" />
+
+  <include file="$(find easy_handeye)/launch/calibrate.launch">
+    <arg name="eye_on_hand" value="true"/>
+
+    <!-- you can choose any identifier, as long as you use the same for publishing the calibration -->
+<!--
+    <arg name="namespace" value="my_eih_calib"/>
+-->
+
+    <!-- fill in the following parameters according to your robot's published tf frames -->
+    <arg name="robot_base_frame" value="world"/>
+    <arg name="robot_effector_frame" value="panda_hand"/>
+
+    <!-- fill in the following parameters according to your tracking system's published tf frames -->
+    <arg name="tracking_base_frame" value="camera_color_optical_frame"/>
+    <arg name="tracking_marker_frame" value="checkerboard"/>
+  </include>
+</launch>

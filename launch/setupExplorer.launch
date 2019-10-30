@@ -1,13 +1,7 @@
 <launch>
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find real_robot_explorer)/launch/debug_view.rviz"/>
-	<include file="$(find realsense2_camera)/launch/rs_camera.launch">
-		<!-- remap from=global to=inNode -->
-		<arg name="depth_width"         default="848"/>
-		<arg name="depth_height"        default="480"/>
-		<arg name="color_width"         default="848"/>
-		<arg name="color_height"        default="480"/>
-		<arg name="align_depth" value="true"/> <!-- Publishes copies of image aligned to depth-->
-	</include>
+	
+	<include file="$(find real_robot_explorer)/launch/setupCamera.launch"/>
 	
 	<include file="$(find real_robot_explorer)/launch/setupMoveIt.launch"/>
 	<!-- offset frame orientation realsense - urdf filter / ros default -->

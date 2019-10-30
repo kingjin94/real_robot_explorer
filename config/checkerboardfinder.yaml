@@ -1,0 +1,51 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  adaptive_thresh: true
+  checkerboard_columns: 9
+  checkerboard_min_square_size: 10
+  checkerboard_rows: 6
+  checkerboard_square_size: 0.026
+  fast_check: false
+  filter_quads: false
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      adaptive_thresh: true
+      checkerboard_columns: 9
+      checkerboard_min_square_size: 10
+      checkerboard_rows: 6
+      checkerboard_square_size: 0.026
+      fast_check: false
+      filter_quads: false
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      input_raw: true
+      name: Default
+      normalize_image: false
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      plubish_marker: true
+      plubish_tf: true
+      publish_fiducials: false
+      publish_pose: false
+      rotate_camera_image_180: false
+      show_camera_image: true
+      show_camera_image_waitkey: 2
+      state: true
+      subpixelfit: true
+      subpixelfit_window_size: 8
+      type: ''
+    state: []
+  input_raw: true
+  normalize_image: false
+  plubish_marker: true
+  plubish_tf: true
+  publish_fiducials: false
+  publish_pose: false
+  rotate_camera_image_180: false
+  show_camera_image: true
+  show_camera_image_waitkey: 2
+  subpixelfit: true
+  subpixelfit_window_size: 8
+state: []
