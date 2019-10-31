@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import rospy
-from geometry_msgs.msg import WrenchStamped, Vector3Stamped, Vector3
+from geometry_msgs.msg import WrenchStamped, Vector3Stamped, Vector3, PointStamped, Point
+from sensor_msgs.msg import JointState
 import numpy as np
 import tf
 from copy import deepcopy
@@ -28,7 +29,7 @@ class ForceObserver:
 		start = rospy.Time.now()
 		while not self.tf_listener.canTransform("world", msg.header.frame_id, msg.header.stamp):
 			rospy.sleep(0.001) # wait for sync in tf
-			if rospy.Time.now() > start + rospy.Duration.from_sec(0.1):
+			if rospy.Time.now() > start + rospy.Duration.from_sec(0.5):
 				print("No Transform")
 				return
 		tool_weight_msg=self.tf_listener.transformVector3(msg.header.frame_id, tool_weight_msg)
@@ -37,14 +38,22 @@ class ForceObserver:
 		net_force = force - tool_weight_force
 		if np.linalg.norm(net_force) < ABS_FORCE_THRES:
 			return
+		j_state = rospy.wait_for_message("/joint_states", JointState)
+		if np.linalg.norm(j_state.velocity) > 0.1:
+			print("Too fast")
+			return
 		# TODO: Filter to high accelertations of eef
 		normal = net_force/np.linalg.norm(net_force)
 		c_point = normal * (0.015)
-		print(c_point)
+		c_point_msg = PointStamped()
+		c_point_msg.header = deepcopy(msg.header)
+		c_point_msg.point = Point(*c_point)
+		c_pt_global = self.tf_listener.transformPoint("world", c_point_msg)
+		print(c_pt_global)
 		ret_msg = ContactsState()
-		ret_msg.header = deepcopy(msg.header)
+		ret_msg.header = deepcopy(c_pt_global.header)
 		contact_state = ContactState()
-		contact_state.contact_positions.append(Vector3(*c_point))
+		contact_state.contact_positions.append(c_pt_global.point)
 		ret_msg.states.append(contact_state)
 		self.coll_pub.publish(ret_msg)
 
